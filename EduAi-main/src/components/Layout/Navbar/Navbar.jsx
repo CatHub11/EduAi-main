@@ -20,7 +20,7 @@ export function NavbarDefault() {
     { label: "Overview", link: "#" },
     { label: "My Tasks", link: "/blog" },
     { label: "A.I Buddy", link: "#" },
-    { label: "Calender", link: "#" },
+    { label: "Calendar", link: "#" },
     { label: "Analytics", link: "#" },
     { label: "About EDUAI", link: "/about-eduai" },
   ];
