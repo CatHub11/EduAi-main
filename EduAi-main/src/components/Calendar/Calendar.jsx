@@ -23,9 +23,10 @@ const Calendar = () => {
   const [activeDay, setActiveDay] = useState(format(today, "yyyy-MM-dd"));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEventModalOpen, setIsEventModalOpen] = useState(false); // New state for event modal
-  const [events, setEvents] = useState({});
+  const [events, setEvents] = useState({}); // Store tasks for each day
   const [newTask, setNewTask] = useState("");
   const [taskTime, setTaskTime] = useState(null);
+  const [endTaskTime, setEndTaskTime] = useState(null); // New state for end task time
   const [viewType, setViewType] = useState("day"); // day, week, month view
   const [selectedSlot, setSelectedSlot] = useState(null); // for selected time slot
   const [selectedEvent, setSelectedEvent] = useState(null); // New state for the selected event
@@ -54,11 +55,13 @@ const Calendar = () => {
   };
 
   const handleAddTask = () => {
-    if (newTask.trim() === "" || !taskTime) return;
+    if (newTask.trim() === "" || !taskTime || !endTaskTime) return;
 
-    const formattedTime = format(taskTime.toDate(), "hh:mm a");
-    const taskWithTime = `${newTask} at ${formattedTime}`;
+    const formattedStartTime = format(taskTime.toDate(), "hh:mm a");
+    const formattedEndTime = format(endTaskTime.toDate(), "hh:mm a");
+    const taskWithTime = `${newTask} from ${formattedStartTime} to ${formattedEndTime}`;
 
+    // Fix: Ensure that multiple tasks can be added to the same day
     setEvents((prevEvents) => {
       const updatedTasks = [...(prevEvents[activeDay] || []), taskWithTime];
       return { ...prevEvents, [activeDay]: updatedTasks };
@@ -66,6 +69,7 @@ const Calendar = () => {
 
     setNewTask("");
     setTaskTime(null);
+    setEndTaskTime(null); // Clear the end time
   };
 
   const handleViewClick = (view) => {
@@ -75,7 +79,8 @@ const Calendar = () => {
 
   const handleSlotSelect = ({ start, end }) => {
     setSelectedSlot({ start, end });
-    setIsModalOpen(true);
+    setActiveDay(format(start, "yyyy-MM-dd")); // Update activeDay to the selected slot's date
+    setIsModalOpen(true); // Open the modal after selecting the slot
   };
 
   const handleEventClick = (event) => {
@@ -146,6 +151,7 @@ const Calendar = () => {
                     onChange={(e) => setNewTask(e.target.value)}
                   />
                   <TimePicker use12Hours format="h:mm a" onChange={setTaskTime} className="text-white" />
+                  <TimePicker use12Hours format="h:mm a" onChange={setEndTaskTime} className="text-white" /> {/* End Time Picker */}
                   <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600" onClick={handleAddTask}>
                     Add
                   </button>
@@ -155,8 +161,8 @@ const Calendar = () => {
                   localizer={localizer}
                   events={Object.keys(events).map(date => ({
                     title: events[date].join(", "),
-                    start: new Date(date),
-                    end: new Date(date),
+                    start: new Date(date + 'T00:00:00'),  // Explicitly set time to midnight to avoid time zone issues
+                    end: new Date(date + 'T23:59:59'),    // Set the end time to the end of the day
                   }))}
                   startAccessor="start"
                   endAccessor="end"
@@ -185,8 +191,10 @@ const Calendar = () => {
             >
               <h2 className="text-lg font-semibold text-white">Event Details</h2>
               <div className="text-white">
-                <p><strong>Task: </strong>{selectedEvent.title}</p>
-                <p><strong>Time: </strong>{format(selectedEvent.start, "h:mm a")}</p>
+                {/* Display only the task name without "at" */}
+                <p><strong>Task: </strong>{selectedEvent.title.split(" from ")[0]}</p>
+                {/* Display start to end time */}
+                <p><strong>Time: </strong>{selectedEvent.title.split(" from ")[1]}</p>
               </div>
               <Button onClick={() => setIsEventModalOpen(false)} className="bg-green-500 text-white mt-4">Close</Button>
             </Modal>
