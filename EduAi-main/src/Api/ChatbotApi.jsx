@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import manthinkingvatar from "/manthinkingvatar.svg";
 import { LoadingOutlined } from "@ant-design/icons";
 import Calendar from "../components/Calendar/Calendar";
+const API_KEY= import.meta.env.VITE_API_KEY
+
 
 const Chatbot = () => {
   const [message, setMessage] = useState("");
@@ -28,8 +30,9 @@ const Chatbot = () => {
     }
 
     try {
+      { /*console.log(API_KEY)
       const API_KEY = "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";
-      if (!API_KEY) throw new Error("Missing API key");
+      if (!API_KEY) throw new Error("Missing API key"); */}
 
       const response = await fetch(
         "https://api-inference.huggingface.co/models/tiiuae/falcon-7b-instruct",

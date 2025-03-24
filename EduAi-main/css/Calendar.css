@@ -1,0 +1,9 @@
+.custom-calendar {
+    height: 500px !important; /* Adjust height */
+    width: 100% !important;  /* Adjust width */
+  }
+  
+  .rbc-calendar {
+    font-size: 14px; /* Change text size if needed */
+  }
+  

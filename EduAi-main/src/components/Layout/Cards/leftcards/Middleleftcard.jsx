@@ -69,11 +69,11 @@ const Middleleftcard = () => {
   return (
     <>
       <Card
-        title="Your Progress: G-Score"
+        title={<span style={{ color: 'white' }}>Your Progress: G-Score</span>} 
         icon={<BarChartOutlined />}
-        className="h-full"
+        style={{ backgroundColor: '#0D0D0D' }}
       >
-        <div className="bg-[#0D0D0D] p-4">
+        <div className="p-4">
           <Progress
             status="active"
             percent={60}
@@ -86,7 +86,7 @@ const Middleleftcard = () => {
           />
         </div>
         <div className="flex gap-2 mt-3 items-center justify-between">
-          <p className="text-[#7E7E7E] text-sm">
+          <p className="text-white text-sm">
             Exceptional consistency! You've maintained peak performance for 5 days straight.
           </p>
           <Button title="View" icon={<BarChartOutlined />} onClick={() => setIsModalOpen(true)} />
